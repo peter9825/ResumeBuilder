@@ -48,7 +48,7 @@ def setup_model():
 # function create_resume prompts the ai to create professional resume based on job and personal description
 def create_resume(gemini_chat, job_description, personal_description):
     """
-    Create a professional resume using Gemini AI.
+    Create a professional resume using Google Gemini AI.
 
     Args:
         gemini_chat: active Gemini chat session
