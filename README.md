@@ -25,14 +25,21 @@ that were specific to my job description.
 Requirements
 
 -Python 3
+
 -Pycharm IDE
+
 -pip updated to latest version
+
 -google.generativeai library (pip install google-generativeai)
+
 -API key found in secrets.txt file
 
 Running the Program
 
 -Open the project in Pycharm IDE
+
 -ensure that you have the google.generativeai library installed
+
 -ensure that you have the secrets.txt file in the project files (API key included)
+
 -Run the program, it should output the resume on the command line and save it as a text file in the project directory.
