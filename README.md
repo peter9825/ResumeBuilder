@@ -1,12 +1,15 @@
 Project Overview
+
 This project is an AI-powered resume generator that creates professional tech resumes in Markdown format based on a given job description and personal profile. 
 It utilizes Google's Gemini AI to analyze job requirements and tailor resumes accordingly.
 
 Why Gemini?
+
 I decided to use Google's Gemeni as my model of choice because of it's
 easy setup and user friendly code functionality. 
 
 Prompt
+
 "Create a professional resume in markdown format based on the following information:
 (personal and job description)
 Format the resume to highlight relevant skills and experience that match the job requirements.
@@ -20,14 +23,16 @@ that were specific to my job description.
 
 
 Requirements
-Python 3
-Pycharm IDE
-pip updated to latest version
-google.generativeai library (pip install google-generativeai)
-API key found in secrets.txt file
+
+-Python 3
+-Pycharm IDE
+-pip updated to latest version
+-google.generativeai library (pip install google-generativeai)
+-API key found in secrets.txt file
 
 Running the Program
-Open the project in Pycharm IDE
-ensure that you have the google.generativeai library installed
-ensure that you have the secrets.txt file in the project files (API key included)
-Run the program, it should output the resume on the command line and save it as a text file in the project directory.
+
+-Open the project in Pycharm IDE
+-ensure that you have the google.generativeai library installed
+-ensure that you have the secrets.txt file in the project files (API key included)
+-Run the program, it should output the resume on the command line and save it as a text file in the project directory.
