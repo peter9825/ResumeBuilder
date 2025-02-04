@@ -24,7 +24,7 @@ that were specific to my job description.
 
 Requirements
 
-- Python 3
+- Python 3 (I've used 3.12)
 
 - Pycharm IDE
 
