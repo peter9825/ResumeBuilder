@@ -5,7 +5,7 @@ It utilizes Google's Gemini AI to analyze job requirements and tailor resumes ac
 
 Why Gemini?
 
-I decided to use Google's Gemeni as my model of choice because of it's
+I decided to use Google's Gemini as my model of choice because of it's
 easy setup and user friendly code functionality. 
 
 Prompt
