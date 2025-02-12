@@ -1,5 +1,6 @@
 import os
 import google.generativeai as genai
+import database
 
 # setup code from the aistudio.google.com website
 def setup_model():
@@ -26,6 +27,7 @@ def setup_model():
 
     return model.start_chat(history=[])
 
+
 # function create_resume prompts the ai to create professional resume based on job and personal description
 def create_resume(gemini_chat, job_description, personal_description):
     prompt = f"""
@@ -43,6 +45,7 @@ def create_resume(gemini_chat, job_description, personal_description):
 
     response = gemini_chat.send_message(prompt)
     return response.text
+
 
 # save_resume function saves resume and sets filename and renames new versions to prevent overwritting resumes
 def save_resume(resume):
@@ -66,6 +69,7 @@ def save_resume(resume):
 def output():
     # try-catch block with descriptions and ai setup to handle errors
     try:
+
         # software development engineer at Adobe description copied from job-data.json
         job_description = """
         "Our Company\n\nChanging the world through digital experiences is what Adobe\u2019s all about. We give everyone\u2014
@@ -120,8 +124,14 @@ def output():
         of Modern AI. I have worked on several technical projects uitilizing Agile methodologies and various programming tools and
         languages such as Java, C, C++, C#, Python, HTML, CSS, Javascript, React, Node.js, PostgreSQL, SQLite, MySQL, Intellij,
         Pycharm, VSCode, Git, and Microsoft Visual Studio.
-        
+
         """
+
+        # call functions to create database
+        database.create_table()
+        database.save_job_data("job-data.json")
+        database.save_job_data2("job-data2.json")
+        print("database created successfully.")
 
         # call function to setup the model
         print("waiting for your resume assistant...")
