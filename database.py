@@ -9,7 +9,7 @@ import json
 DB_NAME = "jobs.db"
 
 
-# connect to the database and create table
+# connect to the database and create the jobs table
 def create_table():
     """Connect to the database and create the jobs table."""
     conn = sqlite3.connect(DB_NAME)

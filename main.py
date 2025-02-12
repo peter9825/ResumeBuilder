@@ -32,7 +32,7 @@ def setup_model():
         "response_mime_type": "text/plain",
     }
 
-    # modified system instructions to yield better prompting results
+    # modified system instructions to yield better prompting results from the model
     model = genai.GenerativeModel(
         model_name="gemini-2.0-flash-exp",
         generation_config=generation_config,

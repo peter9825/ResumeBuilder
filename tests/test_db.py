@@ -45,7 +45,7 @@ class TestDatabaseFunctions(unittest.TestCase):
         Test: verify that save_job_data2 processes the JSON file and uploads the data
         to the database correctly.
         """
-        # create sample job data matching the job-data2.json format.
+        # create sample job data matching the job-data2.json structure.
         sample_data = [
             {
                 "title": "Job1",
