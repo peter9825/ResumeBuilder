@@ -31,39 +31,38 @@ def setup_model():
         model_name="gemini-2.0-flash-exp",
         generation_config=generation_config,
         system_instruction=(
-            "Your job is creating professional tech resumes in markdown format based on a "
-            "personal description provided to you. Your tone should be professional and cater "
-            "to jobs in the software development field."
+            "Your job is to create professional tech resumes in markdown format based on a "
+            "personal description. Your tone should be professional and cater to software "
+            "development jobs."
         ),
     )
 
     return model.start_chat(history=[])
 
-# function create_resume prompts the ai to create professional resume based on job and personal description
+# function create_resume prompts the ai to create professional resume based on job
+# and personal description
 def create_resume(gemini_chat, job_description, personal_description):
     """Prompt the AI to create a professional resume in markdown format."""
-    prompt = f"""
-    Create a professional resume in markdown format based on the following information:
-
-    Job Description:
-    {job_description}
-
-    Personal Description:
-    {personal_description}
-
-    Format the resume to highlight relevant skills and experience that match the job 
-    requirements. Include sections for summary, skills, experience, and education.
-    """
+    prompt = (
+        "Create a professional resume in markdown format based on the following info:\n\n"
+        "Job Description:\n"
+        f"{job_description}\n\n"
+        "Personal Description:\n"
+        f"{personal_description}\n\n"
+        "Format the resume to highlight relevant skills and experience that match the job "
+        "requirements. Include sections for summary, skills, experience, and education."
+    )
     response = gemini_chat.send_message(prompt)
     return response.text
 
-# save_resume function saves resume and sets filename and renames new versions to prevent overwritting resumes
+# save_resume function saves resume and sets filename and renames new versions
+# to prevent overwriting resumes
 def save_resume(resume):
     """Save the generated resume to a file and prevent overwriting by renaming."""
     filename = "resume.txt"
     counter = 1
 
-    # if file already exists name it something different
+    # if file already exists, name it something different
     while os.path.exists(filename):
         filename = f"resume{counter}.txt"
         counter += 1
@@ -82,17 +81,16 @@ def output():
     saves it, and prints it to the command line.
     """
     try:
-        # shortened Adobe job description to fix long line issues
+        # Shortened Adobe job description to avoid long lines
         job_description = (
             "Our Company: Adobe is a global leader in digital experiences. "
-            "We design and deliver exceptional digital experiences. "
-            "Job Description: Join our Managed Services Engineering team to develop "
-            "cloud-native applications using Agile methodologies."
+            "Join our Managed Services Engineering team to develop cloud-native apps "
+            "using Agile methodologies."
         )
         personal_description = (
             "I am a Computer Science major at Bridgewater State University (Class of 2025). "
-            "I have taken courses in Data Structures, Web Development, and Software Engineering, "
-            "and have experience in Python, Java, and C++."
+            "I have experience in Data Structures, Web Development, and Software Engineering, "
+            "and I am proficient in Python, Java, and C++."
         )
 
         # call functions to create database
