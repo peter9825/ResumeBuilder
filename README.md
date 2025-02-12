@@ -37,6 +37,7 @@ Requirements
 
 - API key found in secrets.txt file
 
+
 Running the Program
 
 - Open the project in Pycharm IDE
