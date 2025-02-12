@@ -1,7 +1,8 @@
 Project Overview
 
-This project is an AI-powered resume generator that creates professional tech resumes in Markdown format based on a given job description and personal profile. 
-It utilizes Google's Gemini AI to analyze job requirements and tailor resumes accordingly.
+This project is an AI-powered resume generator that creates professional tech resumes in markdown format based on a given job description and personal profile. 
+It utilizes Google's Gemini AI to analyze job requirements and tailor resumes accordingly. The program stores job ad data from multiple JSON files into an SQLite 
+database to be observed by the user.
 
 Why Gemini?
 
@@ -25,6 +26,8 @@ that were specific to my job description.
 Requirements
 
 - Python 3 (I've used 3.12)
+
+- SQLite3 
 
 - Pycharm IDE
 
