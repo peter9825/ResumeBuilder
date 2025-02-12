@@ -27,13 +27,13 @@ def setup_model():
     }
 
     # modified system instructions to yield better prompting results
-    model = genai.GenerativeModel(
+    model = genai.GenerativeModel(  # pylint: disable=no-member
         model_name="gemini-2.0-flash-exp",
         generation_config=generation_config,
         system_instruction=(
             "Your job is to create professional tech resumes in markdown format based on a "
-            "personal description. Your tone should be professional and cater to software "
-            "development jobs."
+            "personal description provided to you. Your tone should be professional and cater "
+            "to software development jobs."
         ),
     )
 
