@@ -9,6 +9,7 @@ import os
 import sqlite3
 import json
 import tempfile
+import time
 import unittest
 import database
 
@@ -28,8 +29,14 @@ class TestDatabaseFunctions(unittest.TestCase):
 
     def tearDown(self):
         """Delete the temporary database file after each test."""
-        # delete temporary database file.
-        os.remove(self.db_path)
+        # Attempt to delete the temporary database file,
+        # retrying if it's still locked by another process.
+        for _ in range(3):
+            try:
+                os.remove(self.db_path)
+                break
+            except PermissionError:
+                time.sleep(0.5)
 
     # test: connect to the database and check that the 'jobs' table exists.
     def test_create_table(self):
@@ -97,6 +104,7 @@ class TestDatabaseFunctions(unittest.TestCase):
         self.assertEqual(len(rows), 2, "Expected 2 job records in the database")
         self.assertEqual(rows[0], expected1)
         self.assertEqual(rows[1], expected2)
+
 
 if __name__ == "__main__":
     unittest.main()
