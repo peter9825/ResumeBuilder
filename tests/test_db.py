@@ -18,7 +18,6 @@ class TestDatabaseFunctions(unittest.TestCase):
 
     def setUp(self):
         """Create a temporary database file and initialize the jobs table."""
-        # creates a temporary database file, original database references it.
         self.temp_db = tempfile.NamedTemporaryFile(delete=False, suffix=".db")
         self.db_path = self.temp_db.name
         self.temp_db.close()
@@ -29,7 +28,6 @@ class TestDatabaseFunctions(unittest.TestCase):
 
     def tearDown(self):
         """Delete the temporary database file after each test."""
-        # delete temporary database file.
         os.remove(self.db_path)
 
     def test_create_table(self):
