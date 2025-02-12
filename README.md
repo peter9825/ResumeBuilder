@@ -46,4 +46,4 @@ Running the Program
 
 - Ensure that you have the secrets.txt file in the project files (API key included)
 
-- Run the program, it should output the resume on the command line and save it as a text file in the project directory.
+- Run the program, it should create the database, insert job ad data and output your resume on the command line and save it as a text file in the project directory.
