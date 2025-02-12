@@ -66,7 +66,6 @@ def convert_is_remote(value):
 
 # function to parse data from first rabid jobs file and insert the data into the database
 def save_job_data(json_file):
-    """Process job-data.json and insert records into the database."""
     with open(json_file, "r", encoding="utf-8") as f:
         data = f.read().strip()
     try:
@@ -104,7 +103,6 @@ def save_job_data(json_file):
 
 # function to parse data from second rabid jobs file and insert the data into the database
 def save_job_data2(json_file):
-    """Process job-data2.json and insert records into the database."""
     with open(json_file, "r", encoding="utf-8") as f:
         data = f.read().strip()
     try:
