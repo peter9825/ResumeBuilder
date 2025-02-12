@@ -28,7 +28,6 @@ def create_table():
 
 # helper function to extract min-max salary
 def extract_salary(salary_range):
-    """Extract minimum and maximum salary from salaryRange."""
     if salary_range:
         try:
             salary_range = salary_range.strip().replace(",", "")
@@ -43,7 +42,6 @@ def extract_salary(salary_range):
 
 # helper function to extract job url from providers list
 def extract_job_url(job_providers):
-    """Extract job URL from jobProviders list."""
     if job_providers:
         for provider in job_providers:
             if isinstance(provider, dict):
@@ -54,7 +52,6 @@ def extract_job_url(job_providers):
 
 # helper function to convert certain values to floats
 def convert_float(value):
-    """Attempt to convert a value to float, return 0 if conversion fails."""
     try:
         return float(value)
     except (ValueError, TypeError):
@@ -62,11 +59,9 @@ def convert_float(value):
 
 # helper function to convert boolean values to strings
 def convert_is_remote(value):
-    """Convert boolean/integer to 'yes' or 'no'."""
     if isinstance(value, bool):
         return "yes" if value else "no"
     return "yes" if str(value).strip() in ["1", "True", "true"] else "no"
-
 
 
 # function to parse data from first rabid jobs file and insert the data into the database
