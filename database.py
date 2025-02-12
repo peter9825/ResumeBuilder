@@ -1,5 +1,5 @@
 """
-This file creates and populates the jobs database.
+This module creates and populates the jobs database.
 It defines functions to create the jobs table and insert data from two JSON files.
 """
 
