@@ -8,7 +8,7 @@ description and personal description, an d saves the generated resume to a file.
 import os
 import google.generativeai as genai
 import database
-
+import gui
 
 # setup code from the aistudio.google.com website
 def setup_model():
@@ -119,6 +119,8 @@ def output():
         print("\nYour Resume:")
         print("-" * 100)
         print(resume)
+
+        gui.main()
 
     except Exception as e:  # pylint: disable=broad-exception-caught
         print(f"\nerror occurred: {str(e)}")
