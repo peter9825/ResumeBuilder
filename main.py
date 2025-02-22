@@ -9,6 +9,7 @@ import os
 import google.generativeai as genai
 import database
 
+
 # setup code from the aistudio.google.com website
 def setup_model():
     """Set up the generative AI model using an API key from secrets.txt."""
@@ -39,6 +40,7 @@ def setup_model():
 
     return model.start_chat(history=[])
 
+
 # function create_resume prompts the ai to create professional resume based on job
 # and personal description
 def create_resume(gemini_chat, job_description, personal_description):
@@ -54,6 +56,7 @@ def create_resume(gemini_chat, job_description, personal_description):
     )
     response = gemini_chat.send_message(prompt)
     return response.text
+
 
 # save_resume function saves resume and sets filename and renames new versions
 # to prevent overwriting resumes
@@ -74,6 +77,7 @@ def save_resume(resume):
         file.write(normalize_text)
 
     return filename
+
 
 def output():
     """
@@ -118,7 +122,10 @@ def output():
 
     except Exception as e:  # pylint: disable=broad-exception-caught
         print(f"\nerror occurred: {str(e)}")
-        print("please make sure your secrets.txt file contains a valid API key and try again.")
+        print(
+            "please make sure your secrets.txt file contains a valid API key and try again."
+        )
+
 
 if __name__ == "__main__":
     output()

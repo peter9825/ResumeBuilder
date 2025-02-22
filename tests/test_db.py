@@ -13,6 +13,7 @@ import time
 import unittest
 import database
 
+
 # I don't have much experience with writing tests, so I used AI to help me with this portion.
 class TestDatabaseFunctions(unittest.TestCase):
     """Unit tests for database functions."""
@@ -43,7 +44,9 @@ class TestDatabaseFunctions(unittest.TestCase):
         """Test that the 'jobs' table exists in the database."""
         with sqlite3.connect(self.db_path) as conn:
             cur = conn.cursor()
-            cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='jobs'")
+            cur.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='jobs'"
+            )
             self.assertIsNotNone(cur.fetchone(), "jobs table was not created")
 
     # test: test the method that gets the data from the file, upload file to database.
@@ -61,7 +64,7 @@ class TestDatabaseFunctions(unittest.TestCase):
                 "min_amount": "50000",
                 "max_amount": "70000",
                 "is_remote": "True",
-                "job_url": "http://example.com/1"
+                "job_url": "http://example.com/1",
             },
             {
                 "title": "Job2",
@@ -73,12 +76,14 @@ class TestDatabaseFunctions(unittest.TestCase):
                 "min_amount": "40000",
                 "max_amount": "60000",
                 "is_remote": "False",
-                "job_url_direct": "http://example.com/2"
-            }
+                "job_url_direct": "http://example.com/2",
+            },
         ]
 
         # write the sample data to a temporary json file.
-        with tempfile.NamedTemporaryFile(delete=False, mode="w", suffix=".json") as temp_json:
+        with tempfile.NamedTemporaryFile(
+            delete=False, mode="w", suffix=".json"
+        ) as temp_json:
             json.dump(sample_data, temp_json)
             json_file_path = temp_json.name
 
@@ -98,7 +103,14 @@ class TestDatabaseFunctions(unittest.TestCase):
             rows = cur.fetchall()
 
         # expected output
-        expected1 = ("Job1", "Company1", 50000.0, 70000.0, "yes", "http://example.com/1")
+        expected1 = (
+            "Job1",
+            "Company1",
+            50000.0,
+            70000.0,
+            "yes",
+            "http://example.com/1",
+        )
         expected2 = ("Job2", "Company2", 40000.0, 60000.0, "no", "http://example.com/2")
 
         self.assertEqual(len(rows), 2, "Expected 2 job records in the database")

@@ -7,6 +7,8 @@ import sqlite3
 import json
 
 DB_NAME = "jobs.db"
+
+
 # connect to the database and create table
 def create_table():
     """Connect to the database and create the jobs table."""
@@ -34,6 +36,7 @@ def create_table():
     conn.commit()
     conn.close()
 
+
 # helper function to extract min-max salary
 def extract_salary(salary_range):
     """Extract minimum and maximum salary from salaryRange."""
@@ -48,6 +51,7 @@ def extract_salary(salary_range):
             return 0, 0
     return 0, 0
 
+
 # helper function to extract job url from providers list
 def extract_job_url(job_providers):
     """Extract job URL from jobProviders list."""
@@ -59,6 +63,7 @@ def extract_job_url(job_providers):
                     return url
     return None
 
+
 # helper function to convert certain values to floats
 def convert_float(value):
     """Attempt to convert a value to float, return 0 if conversion fails."""
@@ -67,12 +72,14 @@ def convert_float(value):
     except (ValueError, TypeError):
         return 0.0
 
+
 # helper function to convert boolean values to strings
 def convert_is_remote(value):
     """Convert boolean/integer to 'yes' or 'no'."""
     if isinstance(value, bool):
         return "yes" if value else "no"
     return "yes" if str(value).strip() in ["1", "True", "true"] else "no"
+
 
 # function to parse data from first rabid jobs file and insert the data into the database
 def save_job_data(json_file):
@@ -113,6 +120,7 @@ def save_job_data(json_file):
     conn.commit()
     conn.close()
 
+
 # function to parse data from second rabid jobs file and insert the data into the database
 def save_job_data2(json_file):
     """Process job-data2.json and insert records into the database."""
@@ -152,6 +160,7 @@ def save_job_data2(json_file):
         )
     conn.commit()
     conn.close()
+
 
 if __name__ == "__main__":
     create_table()
