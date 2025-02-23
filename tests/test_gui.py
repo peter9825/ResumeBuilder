@@ -86,7 +86,7 @@ class TestUserProfileInsertion(unittest.TestCase):
 
     def tearDown(self):  # pylint:disable=duplicate-code
         """Delete the temporary database file after each test."""
-        for _ in range(5):
+        for _ in range(3):
             try:
                 os.remove(self.db_path)
                 break
