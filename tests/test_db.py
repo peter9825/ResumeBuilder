@@ -28,7 +28,7 @@ class TestDatabaseFunctions(unittest.TestCase):
         # creates the jobs table in the temporary database.
         database.create_table()
 
-    def tearDown(self):
+    def tearDown(self): # pylint:disable=duplicate-code
         """Delete the temporary database file after each test."""
         # Attempt to delete the temporary database file,
         # retrying if it's still locked by another process.
