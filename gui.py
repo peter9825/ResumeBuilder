@@ -1,3 +1,10 @@
+"""
+gui.py
+
+This module creates the application's graphical user interface(GUI)
+and inserts saved user profile data into the database.
+"""
+
 import sqlite3
 import PySimpleGUI as sg
 
@@ -137,7 +144,8 @@ def main():
         [sg.Text("GitHub ID", size=(15, 1)), sg.InputText(key="-GITHUB-", size=(30, 1))],
         [sg.Text("LinkedIn", size=(15, 1)), sg.InputText(key="-LINKEDIN-", size=(30, 1))],
         [sg.Text("Projects", size=(15, 1)), sg.Multiline("", size=(30, 4), key="-PROJECTS-")],
-        [sg.Text("Relevant Courses", size=(15, 1)), sg.Multiline("", size=(30, 4), key="-COURSES-")],
+        [sg.Text("Relevant Courses", size=(15, 1)),
+         sg.Multiline("", size=(30, 4), key="-COURSES-")],
         [sg.Text("Other", size=(15, 1)), sg.Multiline("", size=(30, 4), key="-OTHER-")],
         [sg.Button("Save Profile", size=(15, 1))]
     ]

@@ -1,5 +1,7 @@
 """
-tests/test_all.py
+tests/test_gui.py
+
+This module contains unit tests for gui functionality and database insertion.
 
 Test 1: when a user selects a job from Job Listings,
 all the data is returned to be displayed in Job Details.
@@ -12,12 +14,13 @@ import sqlite3
 import tempfile
 import time
 import unittest
-import database
 import gui
 
 # Test 1
 class TestFormatJobDetails(unittest.TestCase):
+    """Unit tests to display all job info."""
     def test_format_job_details(self):
+        """Unit test to retrieve full info from selected job in the list."""
         # create a sample job tuple representing a job entry from the database
 
         job = (
@@ -55,6 +58,7 @@ class TestFormatJobDetails(unittest.TestCase):
 # Test 2
 # following similar logic from previous database testing
 class TestUserProfileInsertion(unittest.TestCase):
+    """Unit tests to ensure that user data is saved to the database properly."""
     def setUp(self):
         """Create a temporary database file and initialize the user_profiles table."""
         # creates a temporary database file
