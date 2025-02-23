@@ -4,7 +4,6 @@ main.py
 This module sets up the generative AI model, creates a resume based on a job
 description and personal description, an d saves the generated resume to a file.
 """
-
 import os
 import google.generativeai as genai
 import database
