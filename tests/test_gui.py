@@ -84,15 +84,14 @@ class TestUserProfileInsertion(unittest.TestCase):
         self.assertIsNotNone(table, "user_profiles table was not created in setUp")
         conn.close()
 
-    def tearDown(self): # pylint:disable=duplicate-code
+    def tearDown(self):  # pylint:disable=duplicate-code
         """Delete the temporary database file after each test."""
-        # wait briefly to allow connections to close before removing temp db.
-        for _ in range(3):
+        for _ in range(5):
             try:
                 os.remove(self.db_path)
                 break
             except PermissionError:
-                time.sleep(0.5)
+                time.sleep(1)
 
     def test_save_user_profile(self):
         """Test that saving a user profile inserts the correct data into the database."""
