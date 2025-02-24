@@ -1,4 +1,3 @@
-# pylint: disable=duplicate-code
 """
 tests/test_gui.py
 
