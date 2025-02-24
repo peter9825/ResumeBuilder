@@ -91,7 +91,7 @@ class TestUserProfileInsertion(unittest.TestCase):
                 os.remove(self.db_path)
                 break
             except PermissionError:
-                time.sleep(0.5)
+                time.sleep(1)
 
     def test_save_user_profile(self):
         """Test that saving a user profile inserts the correct data into the database."""
