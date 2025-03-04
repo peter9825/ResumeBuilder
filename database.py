@@ -134,9 +134,8 @@ def save_job_data2(json_file):
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     for job in jobs:
-        # Only skip job entries with no company data.
+        # only skip job entries with no company data.
         if not job.get("company"):
-            print(f"Skipping job entry due to missing company: {job.get('title', 'Unknown Title')}")
             continue
 
         min_salary = convert_float(job.get("min_amount", "0"))

@@ -1,8 +1,8 @@
 """
 main.py
 
-This module sets up the generative AI model, creates a resume based on a job
-description and personal description, an d saves the generated resume to a file.
+This module sets up the generative AI model and calls
+the necessary functions from other files to run the program.
 """
 import os
 import google.generativeai as genai
@@ -80,45 +80,13 @@ def save_resume(resume):
 
 def output():
     """
-    Main function that creates the database, sets up the model, generates a resume,
-    saves it, and prints it to the command line.
+    Main function that calls create database and gui with AI setup
+    functionality.
     """
     try:
-        # Shortened Adobe job description to avoid long lines
-        job_description = (
-            "Our Company: Adobe is a global leader in digital experiences. "
-            "Join our Managed Services Engineering team to develop cloud-native apps "
-            "using Agile methodologies."
-        )
-        personal_description = (
-            "I am a Computer Science major at Bridgewater State University (Class of 2025). "
-            "I have experience in Data Structures, Web Development, and Software Engineering, "
-            "and I am proficient in Python, Java, and C++."
-        )
-
-        # call functions to create database
         database.create_table()
         database.save_job_data("job-data.json")
         database.save_job_data2("job-data2.json")
-        print("database created successfully.")
-
-        # call function to setup the model
-        print("waiting for your resume assistant...")
-        gemini_chat = setup_model()
-
-        # call function create_resume
-        print("\nbuilding your resume...")
-        resume = create_resume(gemini_chat, job_description, personal_description)
-
-        # call function save_resume
-        filename = save_resume(resume)
-        print(f"\nresume has been saved as: {filename}")
-
-        # display resume on the command line
-        print("\nYour Resume:")
-        print("-" * 100)
-        print(resume)
-
         gui.main()
 
     except Exception as e:  # pylint: disable=broad-exception-caught

@@ -5,8 +5,9 @@ This module creates the application's graphical user interface(GUI)
 and inserts saved user profile data into the database.
 """
 
-import sqlite3
 import PySimpleGUI as sg
+import sqlite3
+from main import setup_model, create_resume, save_resume
 
 DB_NAME = "jobs.db"
 
@@ -34,10 +35,9 @@ def create_user_profiles_table():
     conn.commit()
     conn.close()
 
-
 def get_jobs():
     """
-    Retrieve all job entries from the 'jobs' table, returning (id, title).
+    Retrieve all job entries from the 'jobs' table, returning (id,title).
     """
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
@@ -57,12 +57,31 @@ def get_job_details(job_id):
     conn.close()
     return job
 
+def get_user_profiles():
+    """
+    Retrieve all user profiles from the user_profiles table.
+    Each profile is returned as a tuple:
+    (id, full_name, email, phone, githubID, linkedin, projects, relevant_courses, other_info)
+    """
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT id, full_name, email, phone, githubID, linkedin, projects, relevant_courses, other_info
+        FROM user_profiles
+        """
+    )
+    profiles = cursor.fetchall()
+    conn.close()
+    return profiles
+
 def save_user_profile(data):
     """
     Insert a new user into the user_profiles table using the data dictionary.
     """
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
+    # Insert the user profile data into the user_profiles table.
     cursor.execute(
         """
         INSERT INTO user_profiles (
@@ -84,7 +103,6 @@ def save_user_profile(data):
     conn.commit()
     conn.close()
 
-# helper function to format job details
 def format_job_details(job):
     """
     Format the job details into a string for display.
@@ -118,10 +136,14 @@ def main():
     jobs = get_jobs()
     job_list = [f"{job[0]}: {job[1]}" for job in jobs]
 
+    # get saved profiles for the dropdown menu
+    profiles = get_user_profiles()
+    profile_options = [f"{p[0]}: {p[1]}" for p in profiles]
+
     # color theme of the gui
     sg.theme("NeonGreen1")
 
-    # layout for job listings and details
+    # layout for job listings and details.
     job_layout = [
         [sg.Text("Job Listings")],
         [
@@ -136,45 +158,46 @@ def main():
         [sg.Multiline("", size=(60, 10), key="-JOB_DETAILS-")]
     ]
 
-    # layout for user profile input fields, consists of label and input field
     profile_layout = [
+        [
+            sg.Text("Select Profile", size=(15, 1)),
+            sg.Combo(profile_options, key="-PROFILE_SELECT-", enable_events=True, size=(30, 1))
+        ],
         [sg.Text("Full Name", size=(15, 1)), sg.InputText(key="-FULL_NAME-", size=(30, 1))],
         [sg.Text("Email Address", size=(15, 1)), sg.InputText(key="-EMAIL-", size=(30, 1))],
         [sg.Text("Phone Number", size=(15, 1)), sg.InputText(key="-PHONE-", size=(30, 1))],
         [sg.Text("GitHub ID", size=(15, 1)), sg.InputText(key="-GITHUB-", size=(30, 1))],
         [sg.Text("LinkedIn", size=(15, 1)), sg.InputText(key="-LINKEDIN-", size=(30, 1))],
         [sg.Text("Projects", size=(15, 1)), sg.Multiline("", size=(30, 4), key="-PROJECTS-")],
-        [sg.Text("Relevant Courses", size=(15, 1)),
-         sg.Multiline("", size=(30, 4), key="-COURSES-")],
+        [sg.Text("Relevant Courses", size=(15, 1)), sg.Multiline("", size=(30, 4), key="-COURSES-")],
         [sg.Text("Other", size=(15, 1)), sg.Multiline("", size=(30, 4), key="-OTHER-")],
-        [sg.Button("Save Profile", size=(15, 1))]
+        # Add two buttons: one to save profile and one to generate resume
+        [sg.Button("Save Profile", size=(15, 1)), sg.Button("Generate Resume", size=(15, 1))]
     ]
 
-    # create vertical separator for better user experience
+    # create vertical seperator for better user experience
     layout = [
         [sg.Column(job_layout), sg.VerticalSeparator(), sg.Column(profile_layout)]
     ]
 
-    # main window
     window = sg.Window("Job Finder", layout, finalize=True)
 
     # loop to read events from the window
     while True:
         event, values = window.read()
         if event == sg.WINDOW_CLOSED:
-            break # exit loop if the window is closed
+            break
 
-        # event when user selects job listing
+        # when a job is selected, update the job details display.
         if event == "-JOB_LIST-":
             selected = values["-JOB_LIST-"]
             if selected:
-                # split id and title at ":"
                 job_id_str = selected[0].split(":")[0]
                 try:
                     job_id = int(job_id_str)
-                    job = get_job_details(job_id) # fetch job details from the database
+                    job = get_job_details(job_id)
                     if job:
-                        # use helper function to format job details
+                        # Use the helper function to format job details.
                         details = format_job_details(job)
                         window["-JOB_DETAILS-"].update(details)
                     else:
@@ -182,7 +205,26 @@ def main():
                 except ValueError:
                     window["-JOB_DETAILS-"].update("Invalid job selection.")
 
-        # event when user clicks the "Save Profile" button
+        # when a saved profile is selected, autofill the profile fields.
+        if event == "-PROFILE_SELECT-":
+            selected_profile = values["-PROFILE_SELECT-"]
+            if selected_profile:
+                profile_id = int(selected_profile.split(":")[0])
+                # get the latest profile
+                profiles = get_user_profiles()
+                for p in profiles:
+                    if p[0] == profile_id:
+                        window["-FULL_NAME-"].update(p[1])
+                        window["-EMAIL-"].update(p[2])
+                        window["-PHONE-"].update(p[3])
+                        window["-GITHUB-"].update(p[4])
+                        window["-LINKEDIN-"].update(p[5])
+                        window["-PROJECTS-"].update(p[6])
+                        window["-COURSES-"].update(p[7])
+                        window["-OTHER-"].update(p[8])
+                        break
+
+        # when "Save Profile" is clicked, save the profile and update the dropdown.
         if event == "Save Profile":
             profile_data = {
                 "full_name": values["-FULL_NAME-"],
@@ -194,13 +236,63 @@ def main():
                 "relevant_courses": values["-COURSES-"],
                 "other_info": values["-OTHER-"],
             }
-            # basic input validation for full name and email
             if not profile_data["full_name"] or not profile_data["email"]:
                 sg.popup("Full Name and Email are required.")
             else:
-                # save profile to database
                 save_user_profile(profile_data)
                 sg.popup("Profile saved successfully!")
+                profiles = get_user_profiles()
+                profile_options = [f"{p[0]}: {p[1]}" for p in profiles]
+                window["-PROFILE_SELECT-"].update(values=profile_options)
+
+        # When "Generate Resume" is clicked, generate a resume using AI.
+        if event == "Generate Resume":
+            # Check if a job is selected.
+            selected = values["-JOB_LIST-"]
+            if not selected:
+                sg.popup("Please select a job from the list.")
+                continue
+            job_id_str = selected[0].split(":")[0]
+            try:
+                job_id = int(job_id_str)
+            except ValueError:
+                sg.popup("Invalid job selection.")
+                continue
+
+            job = get_job_details(job_id)
+            if not job:
+                sg.popup("Job details not found.")
+                continue
+
+            # provide the AI with description from gui.
+            job_description = job[3]
+            # combine profile inputs to form a personal description.
+            personal_description = (
+                f"Full Name: {values['-FULL_NAME-']}\n"
+                f"Email: {values['-EMAIL-']}\n"
+                f"Phone: {values['-PHONE-']}\n"
+                f"GitHub: {values['-GITHUB-']}\n"
+                f"LinkedIn: {values['-LINKEDIN-']}\n"
+                f"Projects: {values['-PROJECTS-']}\n"
+                f"Relevant Courses: {values['-COURSES-']}\n"
+                f"Other Info: {values['-OTHER-']}"
+            )
+
+            # Check that required profile fields are filled.
+            if not values["-FULL_NAME-"] or not values["-EMAIL-"]:
+                sg.popup("Please fill in your Full Name and Email before generating a resume.")
+                continue
+
+            # set up the AI model.
+            sg.popup("Generating resume, please wait...")
+            gemini_chat = setup_model()
+            # generate resume using the selected job description and user profile info.
+            resume = create_resume(gemini_chat, job_description, personal_description)
+            # save the resume to a file.
+            filename = save_resume(resume)
+            sg.popup(f"Resume generated and saved as: {filename}")
+            # display the resume.
+            sg.popup_scrolled(resume, title="Generated Resume")
 
     window.close()
 
