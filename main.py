@@ -9,9 +9,10 @@ resume/cover letter text, with no additional commentary or explanations.
 """
 import os
 import google.generativeai as genai
+from fpdf import FPDF
 import database
 import gui
-from fpdf import FPDF
+
 
 # subfolder names for Markdown and PDF files
 MARKDOWN_FOLDER = "markdown_files"
@@ -54,7 +55,8 @@ def create_resume(gemini_chat, job_description, personal_description):
     """
     prompt = (
         "Create a professional resume in markdown format based on the following info.\n\n"
-        "Do NOT include any commentary, key improvements, or explanations only the final resume text.\n\n"
+        "Do NOT include any commentary, key improvements, or "
+        "explanations only the final resume text.\n\n"
         "Job Description:\n"
         f"{job_description}\n\n"
         "Personal Description:\n"
@@ -66,7 +68,7 @@ def create_resume(gemini_chat, job_description, personal_description):
     response = gemini_chat.send_message(prompt)
     return response.text
 
-# save_resume function saves resume, sets filename and renames newer versions
+# save_resume function saves resume, sets the filename and renames newer versions
 # to prevent overwriting resumes
 # it saves files to subfolders depending on the extension for organization
 def save_resume(resume):
@@ -85,11 +87,11 @@ def save_resume(resume):
         counter += 1
 
     with open(filename, "w", encoding="utf-8", newline="\n") as file:
-        normalize_text = resume.replace("\r\n", "\n").replace("\r", "\n")
-        file.write(normalize_text)
+        normalized_text = resume.replace("\r\n", "\n").replace("\r", "\n")
+        file.write(normalized_text)
     return filename
 
-# function create_cover_letter prompts the ai to create professional cover letter based on job
+# function create_cover_letter prompts the ai to create a professional cover letter based on job
 # and personal_description
 def create_cover_letter(gemini_chat, job_description, personal_description):
     """
@@ -99,18 +101,20 @@ def create_cover_letter(gemini_chat, job_description, personal_description):
     """
     prompt = (
         "Create a professional cover letter in markdown format based on the following info.\n\n"
-        "Do NOT include any commentary, key improvements, or explanations only the final cover letter text.\n\n"
+        "Do NOT include any commentary, key improvements, or explanations "
+        "only the final cover letter text.\n\n"
         "Job Description:\n"
         f"{job_description}\n\n"
         "Personal Information:\n"
         f"{personal_description}\n\n"
-        "Explain why you are an ideal candidate for this role and highlight your key qualifications.\n"
+        "Explain why you are an ideal candidate for this role and highlight your key "
+        "qualifications.\n"
         "Do not add any extra text or commentary beyond the cover letter itself."
     )
     response = gemini_chat.send_message(prompt)
     return response.text
 
-# save_cover_letter function saves cover letter, sets filename and renames newer versions
+# save_cover_letter function saves cover letter, sets the filename and renames newer versions
 # to prevent overwriting cover letters
 # it saves files to subfolders depending on the extension for organization
 def save_cover_letter(cover_letter):
@@ -129,8 +133,8 @@ def save_cover_letter(cover_letter):
         counter += 1
 
     with open(filename, "w", encoding="utf-8", newline="\n") as file:
-        normalize_text = cover_letter.replace("\r\n", "\n").replace("\r", "\n")
-        file.write(normalize_text)
+        normalized_text = cover_letter.replace("\r\n", "\n").replace("\r", "\n")
+        file.write(normalized_text)
     return filename
 
 # function to convert markdown files to pdf, saves to pdf subfolder
@@ -138,6 +142,7 @@ def convert_text_to_pdf(text_filepath):
     """
     Convert the given Markdown file to a PDF file using the FPDF module.
     The PDF file is saved in the PDF_FOLDER subfolder.
+    Before writing, replace problematic Unicode characters with ASCII equivalents.
     """
     os.makedirs(PDF_FOLDER, exist_ok=True)
     base_name = os.path.splitext(os.path.basename(text_filepath))[0]
@@ -154,6 +159,10 @@ def convert_text_to_pdf(text_filepath):
 
     with open(text_filepath, "r", encoding="utf-8") as f:
         content = f.read()
+    # replace problematic Unicode characters
+    content = content.replace("\u2013", "-")
+    content = content.replace("\u2019", "'")
+
     pdf.multi_cell(0, 10, content)
     pdf.output(pdf_filename)
     return pdf_filename
@@ -162,7 +171,7 @@ def convert_text_to_pdf(text_filepath):
 def output():
     """
     Main function that calls create database and gui with AI setup functionality.
-    After the GUI interaction, it converts generated resume and cover letter Markdown files
+    After the GUI interaction, it converts all generated resume and cover letter Markdown files
     in MARKDOWN_FOLDER to PDF files in PDF_FOLDER.
     """
     try:
@@ -170,16 +179,6 @@ def output():
         database.save_job_data("job-data.json")
         database.save_job_data2("job-data2.json")
         gui.main()
-
-        resume_md = os.path.join(MARKDOWN_FOLDER, "resume.md")
-        cover_md = os.path.join(MARKDOWN_FOLDER, "cover_letter.md")
-
-        if os.path.exists(resume_md):
-            resume_pdf = convert_text_to_pdf(resume_md)
-            print(f"Resume PDF generated: {resume_pdf}")
-        if os.path.exists(cover_md):
-            cover_pdf = convert_text_to_pdf(cover_md)
-            print(f"Cover Letter PDF generated: {cover_pdf}")
 
     except Exception as e:  # pylint: disable=broad-exception-caught
         print(f"\nerror occurred: {str(e)}")

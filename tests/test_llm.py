@@ -1,13 +1,24 @@
+"""
+test_llm_response.py
+
+This module contains unit tests for verifying that the create_resume function from main.py
+returns a valid, non-empty response from the language model (LLM). It uses MagicMock from
+the unittest.mock module to simulate the behavior of the LLM without making an actual API call.
+"""
 import unittest
 from unittest.mock import MagicMock
 from main import create_resume
 
+
 # I used AI to help me with MagickMock its functionality.
-# this test essentially does the same thing but instead of checking
-# the prompt it checks that the response from the AI is not empty
+# it checks that the response from the AI is not empty
 # since we are not using web api's this is a way of confirming 200/ok
 
 class TestLLMResponse(unittest.TestCase):
+    """
+    Unit test class for verifying that the create_resume function returns a non-empty response.
+    This test simulates confirming a successful (200/OK) response from the LLM.
+    """
     def test_llm_response_is_not_empty(self):
         """
         Test that create_resume returns a non-empty response from the LLM.

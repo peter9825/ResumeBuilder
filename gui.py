@@ -5,9 +5,8 @@ This module creates the application's graphical user interface (GUI),
 inserts saved user profile data into the database, allows the
 user to pick a job from the database and generate a resume and cover letter
 """
-import PySimpleGUI as sg
 import sqlite3
-
+import PySimpleGUI as sg
 DB_NAME = "jobs.db"
 
 def create_user_profiles_table():
@@ -66,7 +65,8 @@ def get_user_profiles():
     cursor = conn.cursor()
     cursor.execute(
         """
-        SELECT id, full_name, email, phone, githubID, linkedin, projects, relevant_courses, other_info
+        SELECT id, full_name, email, phone, githubID, 
+        linkedin, projects, relevant_courses, other_info
         FROM user_profiles
         """
     )
@@ -161,17 +161,21 @@ def main():
     # layout for user profile inputs with aligned labels.
     # dropdown for saved profiles.
     profile_layout = [
-        [sg.Text("Select Profile", size=(15, 1)), sg.Combo(profile_options, key="-PROFILE_SELECT-", enable_events=True, size=(30, 1))],
+        [sg.Text("Select Profile", size=(15, 1)), sg.Combo(profile_options,
+        key="-PROFILE_SELECT-", enable_events=True, size=(30, 1))],
         [sg.Text("Full Name", size=(15, 1)), sg.InputText(key="-FULL_NAME-", size=(30, 1))],
         [sg.Text("Email Address", size=(15, 1)), sg.InputText(key="-EMAIL-", size=(30, 1))],
         [sg.Text("Phone Number", size=(15, 1)), sg.InputText(key="-PHONE-", size=(30, 1))],
         [sg.Text("GitHub ID", size=(15, 1)), sg.InputText(key="-GITHUB-", size=(30, 1))],
         [sg.Text("LinkedIn", size=(15, 1)), sg.InputText(key="-LINKEDIN-", size=(30, 1))],
         [sg.Text("Projects", size=(15, 1)), sg.Multiline("", size=(30, 4), key="-PROJECTS-")],
-        [sg.Text("Relevant Courses", size=(15, 1)), sg.Multiline("", size=(30, 4), key="-COURSES-")],
+        [sg.Text("Relevant Courses", size=(15, 1)),
+         sg.Multiline("", size=(30, 4), key="-COURSES-")],
         [sg.Text("Other", size=(15, 1)), sg.Multiline("", size=(30, 4), key="-OTHER-")],
         # three buttons: one to save profile, one to generate resume, and one for cover letter.
-        [sg.Button("Save Profile", size=(15, 1)), sg.Button("Generate Resume", size=(15, 1)), sg.Button("Generate Cover Letter", size=(15, 1))]
+        [sg.Button("Save Profile", size=(15, 1)),
+         sg.Button("Generate Resume", size=(15, 1)),
+         sg.Button("Generate Cover Letter", size=(15, 1))]
     ]
 
     # create vertical separator for better user experience
@@ -246,7 +250,7 @@ def main():
 
         # when "Generate Resume" is clicked, generate a resume using AI.
         if event == "Generate Resume":
-            from main import setup_model, create_resume, save_resume
+            from main import setup_model, create_resume, save_resume, convert_text_to_pdf
             # Check if a job is selected
             selected = values["-JOB_LIST-"]
             if not selected:
@@ -264,9 +268,9 @@ def main():
                 sg.popup("Job details not found.")
                 continue
 
-            # provide the AI with description from gui.
+            # provide the AI with description from gui
             job_description = job[3]
-            # combine profile inputs to form a personal description.
+            # combine profile inputs to from a personal description
             personal_description = (
                 f"Full Name: {values['-FULL_NAME-']}\n"
                 f"Email: {values['-EMAIL-']}\n"
@@ -283,19 +287,21 @@ def main():
                 sg.popup("Please fill in your Full Name and Email before generating a resume.")
                 continue
 
-            # setup the AI model
+            # call setup model
             sg.popup("Generating resume, please wait...")
             gemini_chat = setup_model()
-            # generate a resume using the selected job description and user profile info.
             resume = create_resume(gemini_chat, job_description, personal_description)
-            # save the resume to a file.
-            filename = save_resume(resume)
-            sg.popup(f"Resume generated and saved as: {filename}")
-            sg.popup(f"pdf version saved in pdf_files.")
+            # save the resume as a Markdown file
+            md_filename = save_resume(resume)
+            # immediately convert the newly saved Markdown file to PDF
+            pdf_filename = convert_text_to_pdf(md_filename)
+            sg.popup(f"Resume generated and saved as: {md_filename}")
+            sg.popup(f"PDF version generated: {pdf_filename}")
 
         # when "Generate Cover Letter" is clicked, generate a cover letter using AI.
         if event == "Generate Cover Letter":
-            from main import setup_model, create_cover_letter, save_cover_letter
+            from main import (setup_model, create_cover_letter,
+                              save_cover_letter, convert_text_to_pdf)
             selected = values["-JOB_LIST-"]
             if not selected:
                 sg.popup("Please select a job from the list.")
@@ -312,7 +318,6 @@ def main():
                 sg.popup("Job details not found.")
                 continue
 
-            # use the job's description as the job description.
             job_description = job[3]
             # combine profile inputs to form a personal description.
             personal_description = (
@@ -327,17 +332,20 @@ def main():
             )
 
             if not values["-FULL_NAME-"] or not values["-EMAIL-"]:
-                sg.popup("Please fill in your Full Name and Email before generating a cover letter.")
+                sg.popup("Please fill in your Full Name and Email before "
+                         "generating a cover letter.")
                 continue
-            # setup the AI model
+            # call setup model
             sg.popup("Generating cover letter, please wait...")
             gemini_chat = setup_model()
             # generate a cover letter using the selected job description and user profile info.
             cover_letter = create_cover_letter(gemini_chat, job_description, personal_description)
-            # save the cover letter to a file.
-            cover_filename = save_cover_letter(cover_letter)
-            sg.popup(f"Cover letter generated and saved as: {cover_filename}")
-            sg.popup(f"pdf version saved in pdf_files.")
+            # immediately convert files and save
+            md_filename = save_cover_letter(cover_letter)
+            pdf_filename = convert_text_to_pdf(md_filename)
+            sg.popup(f"Cover letter generated and saved as: {md_filename}")
+            sg.popup(f"PDF version generated: {pdf_filename}")
+
 
     window.close()
 
