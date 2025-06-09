@@ -6,11 +6,6 @@ database. Upon running the program, the user can observe each job listing using 
 After saving multiple profiles, users can select from each saved profile in the GUI's dropdown menu to preload their data. After generating markdown resumes
 and cover-letters, the program converts the markdown files to pdf versions.
 
-Why Gemini?
-
-I decided to use Google's Gemini as my model of choice because of it's
-easy setup and user friendly code functionality. 
-
 
 Requirements
 
